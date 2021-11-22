@@ -1,1 +1,4 @@
-import './sass/main.scss';
+'use strict';
+
+import './css/styles.css';
+
