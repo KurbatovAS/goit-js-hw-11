@@ -6,17 +6,19 @@ import axios from 'axios';
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 import { refs } from './js/refs';
-// import { fetchArticles } from './js/fetchArticles';
 import { resetMarkup, createCardMarkup } from './js/markup';
 import { noFoundMessage, noMoreImagesMessage, totalHintsMessage } from './js/messages';
 import { resetPageCount, pageCountIncrement } from './js/fetchPageActions';
 
-refs.loadMoreBtnEl.hidden = true;
 let pageCount = 1;
 let searchValue = '';
 let imagesCounter = 0;
 
+refs.loadMoreBtnEl.hidden = true;
+
 refs.formEl.addEventListener('submit', onSubmit);
+refs.loadMoreBtnEl.addEventListener('click', onLoadMoreBtn);
+
 
 function onSubmit(event) {
     event.preventDefault();
@@ -25,21 +27,14 @@ function onSubmit(event) {
     resetMarkup()
     pageCount = resetPageCount(pageCount);
     searchValue = event.target[0].value.trim();    
-    getImages();
-    // const modal = new SimpleLightbox('.gallery a');
+    getImages();    
 };
-
-refs.loadMoreBtnEl.addEventListener('click', onLoadMoreBtn);
-refs.galleryEl.addEventListener('click', onImageClick);
-
-function onImageClick(event) {
-    console.log(event.target)
-}
 
 function onLoadMoreBtn(event) {
     pageCount = pageCountIncrement(pageCount);
     getImages();
 };
+
 
 async function getImages() {
     const axiosOptions = {
@@ -68,8 +63,6 @@ async function getImages() {
         } else {
             createCardMarkup(imagesArray);
             modal.refresh();
-            // var gallery = $('.gallery a').simpleLightbox();
-            // gallery.refresh();
             refs.loadMoreBtnEl.hidden = false;
             imagesCounterIct(foundImagesArray);
             noMoreImages(imagesFound)            
@@ -85,24 +78,15 @@ async function getImages() {
     }        
 }
 
-function imagesCounterReset() {
-    console.log('imagesCounter before reset', imagesCounter)
-    imagesCounter = 0;
-    console.log('imagesCounter after reset', imagesCounter)
+function imagesCounterReset() {    
+    imagesCounter = 0;    
 };
 
 function imagesCounterIct(foundImagesArray) {
-    console.log('imagesCounter before increment', imagesCounter)
-    // if (imagesCounter !== 0) {
-    //     return;
-    // }
-    imagesCounter += foundImagesArray;
-    console.log('imagesCounter after increment', imagesCounter)
+    imagesCounter += foundImagesArray;    
 }
 
 function noMoreImages(imagesFound) {
-    console.log('imagesCounter in noMoreImages()', imagesCounter)
-    console.log('imagesFound in noMoreImages()', imagesFound)
     if (imagesCounter === imagesFound) {
         noMoreImagesMessage();
         refs.loadMoreBtnEl.hidden = true;
