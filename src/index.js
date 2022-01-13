@@ -7,6 +7,7 @@ import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 import { refs } from './js/refs';
 import { resetMarkup, createCardMarkup } from './js/markup';
+import { onRenderPagination } from './js/pagination';
 import { noFoundMessage, noMoreImagesMessage, totalHintsMessage } from './js/messages';
 import { resetPageCount, pageCountIncrement } from './js/fetchPageActions';
 
@@ -19,6 +20,7 @@ refs.loadMoreBtnEl.hidden = true;
 refs.formEl.addEventListener('submit', onSubmit);
 refs.loadMoreBtnEl.addEventListener('click', onLoadMoreBtn);
 
+getImages();
 
 function onSubmit(event) {
     event.preventDefault();
@@ -62,6 +64,7 @@ async function getImages() {
             refs.loadMoreBtnEl.hidden = true;
         } else {
             createCardMarkup(imagesArray);
+            onRenderPagination(imagesFound, pageCount)
             modal.refresh();
             refs.loadMoreBtnEl.hidden = false;
             imagesCounterIct(foundImagesArray);
@@ -94,4 +97,6 @@ function noMoreImages(imagesFound) {
 };
 
 const modal = new SimpleLightbox('.gallery a', { captions: true, captionsData: 'alt', captionDelay: 250 });
+
+export { pageCount, searchValue, getImages };
 
